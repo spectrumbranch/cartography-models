@@ -33,15 +33,13 @@ module.exports.init = function(dbconfig, virt_modules, done) {
 	
 	//export the connection
 	module.exports.sequelize = sequelize;
-
-	for (var i = 0; i < virt_modules.length; i++) {
-		virt_modules[i].loadModels(module.exports);
-	}
+	
+	virt_modules.scurvy.loadModels(module.exports);
     (function(model) {
         //define all associations
 		
 		//scurvy associations
-		var scurvy = require('../').Scurvy;
+		var scurvy = virt_modules.scurvy;
 		scurvy.setupAssociations(model);
 		
 		//cartography specific associations
