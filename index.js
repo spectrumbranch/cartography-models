@@ -23,6 +23,10 @@ module.exports.init = function(dbconfig, virt_modules, done) {
 		{
 			name: "Tile2D",
 			file: "tile2d"
+		},
+		{
+			name: "UserAttributes",
+			file: "user_attributes"
 		}
 	];
 
@@ -47,6 +51,8 @@ module.exports.init = function(dbconfig, virt_modules, done) {
 		model.Map.belongsTo(model.User);
 		model.Map.hasMany(model.Tile2D);
 		model.Tile2D.belongsTo(model.Map);
+		model.User.hasOne(model.UserAttributes);
+		model.UserAttributes.belongsTo(model.User);
         
         //ensure tables are created with the fields and associations
 		
@@ -57,8 +63,10 @@ module.exports.init = function(dbconfig, virt_modules, done) {
 			//cartography specific tables
 			model.Map.sync().success(function() {
 				model.Tile2D.sync().success(function() {
-					//callback
-					done();
+					model.UserAttributes.sync().success(function() {
+						//callback
+						done();
+					}).error(function(error) { console.log("Error during UserAttributes.sync(): " + error); });
 				}).error(function(error) { console.log("Error during Tile2D.sync(): " + error); });
 			}).error(function(error) { console.log("Error during Map.sync(): " + error); });
 		});
